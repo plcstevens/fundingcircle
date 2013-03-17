@@ -17,15 +17,12 @@ module FundingCircle
     def generate_table
       # first get the amount of prime numbers requested (amount is either 10 or whatever the user requests)
       prime_numbers = generate_prime_numbers(amount)
-      #p prime_numbers
 
       # then produce a two dimensional array of the values as the first row and first entry in every column
       table_data = generate_multi_array(prime_numbers)
-      #p table_data
 
       # take these tables and output them to the terminal
-      table = Terminal::Table.new :rows => table_data
-      p table
+      p Terminal::Table.new :rows => table_data
     end
 
     private
@@ -39,17 +36,12 @@ module FundingCircle
     # @param [Array] prime_numbers an array of prime numbers
     # @return [Array] A multi dimensional array of the prime numbers and their products,
     def generate_multi_array prime_numbers
-      result = []
-      return result if prime_numbers.empty?
-      prime_numbers.length.times do |i|
-        # start with the prime number as the first element
-        row = [prime_numbers[i]]
-        # now for every prime number (including itself) extend with the product
-        prime_numbers.length.times do |j|
-          row << prime_numbers[i] * prime_numbers[j]
-        end
-        # add our new row to the result
-        result << row
+      return prime_numbers if prime_numbers.empty?
+      result = prime_numbers.map do |p|
+        # each row starts with the prime number, and all its products afterwards
+        row = []
+        row.push(p)
+        row.push(*prime_numbers.collect { |prime| prime * p })
       end
       result.unshift(prime_numbers.unshift(''))
     end
@@ -62,7 +54,6 @@ module FundingCircle
       x = 0
       # until we have as many primes as requested keep searching
       until primes.length == amount
-        # get the next prime number
         x = next_prime(x)
         primes << x
       end
