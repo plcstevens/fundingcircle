@@ -37,13 +37,12 @@ module FundingCircle
     # @return [Array] A multi dimensional array of the prime numbers and their products,
     def generate_multi_array prime_numbers
       return prime_numbers if prime_numbers.empty?
-      result = prime_numbers.map do |p|
-        # each row starts with the prime number, and all its products afterwards
-        row = []
-        row.push(p)
-        row.push(*prime_numbers.collect { |prime| prime * p })
+      # each row starts with the prime number, and all its products afterwards
+      rows = prime_numbers.map do |prime|
+        [prime, *prime_numbers.collect { |p| prime * p }]
       end
-      result.unshift(prime_numbers.unshift(''))
+      # add the prime numbers to the first row, adding nil to the front
+      rows.unshift(prime_numbers.unshift(nil))
     end
 
     # Given the amount requested, generate that many prime numbers in an array and return it
